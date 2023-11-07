@@ -1,6 +1,9 @@
 package com.elizabe.intid
 
+import android.appwidget.*
+import android.content.*
 import android.os.Bundle
+import android.util.*
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.*
@@ -94,11 +97,23 @@ class IconActivity : AppCompatActivity() {
 
     private fun deleteAllData(){
         GlobalScope.launch(Dispatchers.IO){
+            Log.d("HelloBiplab","Delete Icon Is Called")
             iconDb.iconDao().deleteAll()
-            loadStoredIcons(adapter)
+            loadStoredIcons(adapter = adapter)
+            updateAllWidgets()
         }
 
 
+    }
+
+    private fun updateAllWidgets(){
+        Log.d("HelloBiplab","Update All Is Called")
+        // Create an intent to trigger the widget update
+        val intent = Intent(this, NewAppWidget::class.java)
+        intent.action = NewAppWidget.ACTION_UPDATE_ALL_WIDGET
+
+        // Send the broadcast to trigger the widget update
+        sendBroadcast(intent)
     }
 
     private fun showIconSelectionDialog() {
@@ -111,9 +126,10 @@ class IconActivity : AppCompatActivity() {
             val index = availableIcons.indexOf(selectedIconResId)
             val iconWithData = IconWithData(null, selectedIconResId, availableGoto[index], availableURL[index])
             GlobalScope.launch(Dispatchers.IO) {
+                Log.d("HelloBiplab","Add Icon Is Called")
                 iconDb.iconDao().insert(iconWithData)
                 loadStoredIcons(adapter = adapter)
-
+                updateAllWidgets()
                 // Check if the dialog is not null and dismiss it
                 dialog?.dismiss()
             }

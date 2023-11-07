@@ -45,8 +45,6 @@ class IconAdapter(private val context: Context) :
             // Set a click listener to handle icon click actions
             itemView.setOnClickListener {
                 // Handle the icon click here, e.g., open the associated app or URL
-                // You can use icon.appName and icon.appUrl to determine the action
-                // Example: Implement logic to open apps or URLs
                 val url = icon.appUrl
 
                 if (url != null) {
@@ -55,7 +53,7 @@ class IconAdapter(private val context: Context) :
                         context.startActivity(browserIntent)
                     } else {
                         // Handle cases when the URL is empty or there's no URL to open
-                        // You can show a message to the user or perform any other action.
+
                     }
                 }
             }
